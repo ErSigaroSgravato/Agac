@@ -8,5 +8,14 @@
 </head>
 <body>
     <h1>Pagina principale</h1>
+    @php
+        $benvenuto = "Benvenuto"; 
+        if(isset($_GET["nickname"])){
+            $benvenuto .= " " . $_GET["nickname"]; 
+        }else{
+            $benvenuto .= " Anonymous"; 
+        }
+        echo $benvenuto; 
+    @endphp
 </body>
 </html>

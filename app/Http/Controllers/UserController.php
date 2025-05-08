@@ -23,8 +23,14 @@ class UserController extends Controller
             'passwordHash' => bcrypt($valid_credentials['password']),  
         ]); 
 
+        /*session([
+            'nickname' => $valid_credentials['nickname'],
+           // 'profile_picture' => $user->profile_picture,
+        ]);
+        */
         return redirect('/')->with('success', 'Registration Successful!'); 
     }
+
     public function printCredentials(Request $c): String{
         return $c->input("nickname") . " " . $c->input("email") . " " . $c->input("password"); 
     }
@@ -42,13 +48,19 @@ class UserController extends Controller
 
         if(Auth::attempt($credentials)){
             
-            return "successo" . $this->printCredentials($request_credentials); 
+            return "successo" . " " . $this->printCredentials($request_credentials); 
+
+           /* session([
+                'nickname' => $valid_credentials['nickname'],
+               // 'profile_picture' => $user->profile_picture,
+            ]); */
+
             //$request_credentials->session()->regenerate();
 
-            //return redirect()->intended("welcome"); 
+            //return redirect()->intended(route("welcome") . "?nickname=" . $request_credentials->input("nickname")); 
         }
 
-        return "fallito" . $this->printCredentials($request_credentials); 
+        return "fallito" . " ". $this->printCredentials($request_credentials); 
 /*
         return back()->withErrors([
             'nickname' => 'Possibile che hai messo roba strana',
