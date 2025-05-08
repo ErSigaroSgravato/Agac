@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
 
 protected $table = 'users'; 
+protected $primaryKey = 'UserID'; 
     protected $fillable = [
         'nickname',
         'email',
@@ -48,5 +49,10 @@ protected $table = 'users';
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->passwordHash;
     }
 }

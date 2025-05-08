@@ -20,7 +20,7 @@ class UserController extends Controller
         $user = User::make([
             'nickname' => $valid_credentials['nickname'], 
             'email' => $valid_credentials['email'],
-            'passwordHash' => $valid_credentials['password'],  
+            'passwordHash' => bcrypt($valid_credentials['password']),  
         ]); 
 
         $user->save(); 
@@ -28,12 +28,13 @@ class UserController extends Controller
         Auth::login($user); 
 
 
-        /*session([
+        session([
             'nickname' => $valid_credentials['nickname'],
            // 'profile_picture' => $user->profile_picture,
         ]);
-        */
-        return redirect('/')->with('success', 'Registration Successful!'); 
+        
+
+        return redirect('/welcome');  
     }
 
     public function printCredentials(Request $c): String{
@@ -47,30 +48,25 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required',
         ]); 
- 
-        $credentials = $request_credentials->only('email', 'passwordHash'); 
-       // return $valid_credentials->input("nickname") . " " . $valid_credentials->input("email") ." " . $valid_credentials->input("password");  
+   
 
-        if(Auth::attempt($credentials)){
-            
-            return "successo" . " " . $this->printCredentials($request_credentials); 
-
-           /* session([
+        if(Auth::attempt($valid_credentials)){
+            session([
                 'nickname' => $valid_credentials['nickname'],
                // 'profile_picture' => $user->profile_picture,
-            ]); */
+            ]); 
 
-            //$request_credentials->session()->regenerate();
+            $request_credentials->session()->regenerate();
 
-            //return redirect()->intended("welcome"); 
+            return redirect('/welcome'); 
         }
 
-        return "fallito" . " ". $this->printCredentials($request_credentials); 
-/*
+        //return "fallito" . " ". $this->printCredentials($request_credentials); 
+
         return back()->withErrors([
             'nickname' => 'Possibile che hai messo roba strana',
             'email' => 'Stai attento, mettila bene',
         ]); 
   
-    */} 
+    } 
 }
