@@ -17,11 +17,16 @@ class UserController extends Controller
             'password' => 'required|string',
         ]); 
 
-        User::create([
+        $user = User::make([
             'nickname' => $valid_credentials['nickname'], 
             'email' => $valid_credentials['email'],
-            'passwordHash' => bcrypt($valid_credentials['password']),  
+            'passwordHash' => $valid_credentials['password'],  
         ]); 
+
+        $user->save(); 
+
+        Auth::login($user); 
+
 
         /*session([
             'nickname' => $valid_credentials['nickname'],
@@ -57,7 +62,7 @@ class UserController extends Controller
 
             //$request_credentials->session()->regenerate();
 
-            //return redirect()->intended(route("welcome") . "?nickname=" . $request_credentials->input("nickname")); 
+            //return redirect()->intended("welcome"); 
         }
 
         return "fallito" . " ". $this->printCredentials($request_credentials); 

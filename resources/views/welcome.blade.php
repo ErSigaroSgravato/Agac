@@ -10,7 +10,7 @@
     <h1>Pagina principale</h1>
     @php
         $benvenuto = "Benvenuto"; 
-        if(isset($_GET["nickname"])){
+        if(isset($_SESSION["nickname"])){
             $benvenuto .= " " . $_GET["nickname"]; 
         }else{
             $benvenuto .= " Anonymous"; 
