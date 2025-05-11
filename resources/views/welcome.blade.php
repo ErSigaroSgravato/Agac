@@ -9,5 +9,12 @@
 <body>
     <h1>Pagina principale</h1>
     <p>Benvenuto {{session('nickname', 'Anonymous')}}</p>
+
+    <a href="{{route('register')}}">Register</a>
+    <a href="{{route('login')}}">Login</a>
+    <form action="{{route('logout')}}" method="post">
+        @csrf
+        <input type="submit" value="Logout">
+    </form>
 </body>
 </html>
