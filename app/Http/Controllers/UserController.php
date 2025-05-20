@@ -2,81 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Models\User; 
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+
 class UserController extends Controller
 {
+    public function store(Request $request)
+    {
+        // Temporary development solution - always create test user
+        $user = User::firstOrCreate(
+            ['nickname' => 'test_user'],
+            [
+                'passwordHash' => Hash::make('password'),
+                'steam_id' => '76561198123456789',
+                'email' => 'test@example.com'
+            ]
+        );
 
-
-    public function store(Request $request_credentials){
-        $valid_credentials = $request_credentials->validate([
-            'nickname' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string',
-        ]); 
-
-        $user = User::make([
-            'nickname' => $valid_credentials['nickname'], 
-            'email' => $valid_credentials['email'],
-            'passwordHash' => bcrypt($valid_credentials['password']),  
-        ]); 
-
-        $user->save(); 
-
-        Auth::login($user); 
-
-
-        session([
-            'nickname' => $valid_credentials['nickname'],
-           // 'profile_picture' => $user->profile_picture,
-        ]);
-        
-
-        return redirect('/welcome');  
+        Auth::login($user);
+        return redirect()->route('profile');
     }
 
     public function printCredentials(Request $c): String{
         return $c->input("nickname") . " " . $c->input("email") . " " . $c->input("password"); 
     }
 
-    public function login(Request $request_credentials):String /* RedirectResponse*/{
-        //controllo due volte le credenziali dell'utente, un controllo genrico su html e specifico su laravel 
-        $valid_credentials = $request_credentials->validate([
-            'nickname' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-        ]); 
-   
+    public function login(Request $request)
+    {
+        // Temporary development solution - always log in as test user
+        $user = User::firstOrCreate(
+            ['nickname' => 'test_user'],
+            [
+                'passwordHash' => Hash::make('password'),
+                'steam_id' => '76561198123456789',
+                'email' => 'test@example.com'
+            ]
+        );
 
-        if(Auth::attempt($valid_credentials)){
-            session([
-                'nickname' => $valid_credentials['nickname'],
-               // 'profile_picture' => $user->profile_picture,
-            ]); 
+        Auth::login($user);
+        return redirect()->route('profile');
+    }
 
-            $request_credentials->session()->regenerate();
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('welcome');
+    }
 
-            return redirect('/welcome'); 
-        }
+    public function profile()
+    {
+        // Temporary development solution - always get test user
+        $user = User::firstOrCreate(
+            ['nickname' => 'test_user'],
+            [
+                'passwordHash' => Hash::make('password'),
+                'steam_id' => '76561198123456789',
+                'email' => 'test@example.com'
+            ]
+        );
 
-        //return "fallito" . " ". $this->printCredentials($request_credentials); 
-
-        return back()->withErrors([
-            'nickname' => 'Possibile che hai messo roba strana',
-            'email' => 'Stai attento, mettila bene',
-        ]); 
-  
-    } 
-
-    public function logout(Request $request): RedirectResponse{
-        Auth::logout(); 
-
-        $request->session()->invalidate(); 
-
-        $request->session()->regenerateToken(); 
-
-        return redirect("/welcome"); 
+        return view('profile', ['user' => $user]);
     }
 }

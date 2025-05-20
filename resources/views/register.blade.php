@@ -3,21 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Agac</title>
+    <title>Register - GameHub</title>
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron :wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons "></script>
-
+    <!-- Vite Assets -->
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
 
     <style>
         body {
             font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+            overflow: hidden;
         }
 
+        .bg-stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #0d0d0d 0%, #000000 100%);
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.3;
+            animation: twinkle 3s infinite ease-in-out alternate;
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.2; }
+            to { opacity: 0.8; }
+        }
+
+        /* Logo */
+        .logo {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #60a5fa;
+            text-shadow: 0 0 10px #60a5faaa;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 15px #60a5faff;
+            transform: scale(1.05);
+        }
+
+        /* Card Styles */
+        .card {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            background: rgba(30, 30, 30, 0.85);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease-in-out;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+        }
+
+        /* Inner Glare */
+        .glare {
+            position: absolute;
+            width: 200%;
+            height: 60px;
+            top: -30px;
+            left: -50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: glide 3s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes glide {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Character Silhouettes */
+        .characters {
+            position: absolute;
+            inset: -20px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 0;
+        }
+
+        .card:hover .characters {
+            opacity: 1;
+        }
+
+        .char {
+            position: absolute;
+            width: 40px;
+            height: auto;
+            opacity: 0.15;
+            filter: brightness(0.7);
+        }
+
+        .char-top-left {
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+        }
+
+        .char-top-right {
+            top: 0; right: 0;
+            transform: translate(50%, -50%);
+        }
+
+        .char-bottom-left {
+            bottom: 0; left: 0;
+            transform: translate(-50%, 50%);
+        }
+
+        .char-bottom-right {
+            bottom: 0; right: 0;
+            transform: translate(50%, 50%);
+        }
+
+        /* Login Link Glow */
+        .login-link {
+            position: relative;
+            font-weight: medium;
+            color: #60a5fa;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .login-link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(96, 165, 250, 0.2);
+            border-radius: 9999px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            filter: blur(4px);
+            z-index: -1;
+        }
+
+        .login-link:hover {
+            color: #bfdbfe;
+        }
+
+        .login-link:hover::before {
+            opacity: 1;
+        }
+
+        /* Floating Labels */
         .input-field {
             position: relative;
         }
@@ -42,77 +191,45 @@
             font-size: 0.75rem;
             color: #3b82f6;
         }
-
-        /* Container with hover animation */
-        .card {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .character {
-            position: absolute;
-            font-size: 1.5rem;
-            opacity: 0;
-            transition: all 0.5s ease-in-out;
-            z-index: 0;
-        }
-
-        .card:hover .character {
-            opacity: 1;
-            transform: translate(0, 0);
-        }
-
-        .char-top-left {
-            top: -20px;
-            left: -20px;
-            transform: translate(-20px, -20px);
-        }
-
-        .char-top-right {
-            top: -20px;
-            right: -20px;
-            transform: translate(20px, -20px);
-        }
-
-        .char-bottom-left {
-            bottom: -20px;
-            left: -20px;
-            transform: translate(-20px, 20px);
-        }
-
-        .char-bottom-right {
-            bottom: -20px;
-            right: -20px;
-            transform: translate(20px, 20px);
-        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-slate-900 to-black min-h-screen flex items-center justify-center px-4 overflow-hidden">
+<body class="min-h-screen flex items-center justify-center px-4 relative">
 
-    <!-- Optional Background Texture -->
-    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-mamba.png ')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+    <!-- Animated Background -->
+    <div class="bg-stars" aria-hidden="true">
+        @for ($i = 0; $i < 100; $i++)
+            <div class="star" style="top: {{ rand(0, 100) }}%; left: {{ rand(0, 100) }}%; width: {{ rand(1, 3) }}px; height: {{ rand(1, 3) }}px;"></div>
+        @endfor
+    </div>
 
-    <!-- Card -->
-    <div class="card w-full max-w-md bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-gray-700 z-10 transform transition-all duration-500 hover:shadow-blue-500/20 hover:shadow-2xl">
+    <!-- Logo -->
+    <a href="/welcome" class="logo">GameHub</a>
 
-        <!-- Game Characters (emojis for now, replace with SVG if desired) -->
-        <div class="char-top-left character">🎮</div>
-        <div class="char-top-right character">👾</div>
-        <div class="char-bottom-left character">🕹️</div>
-        <div class="char-bottom-right character">💥</div>
+    <!-- Registration Card -->
+    <div class="card relative group mx-auto my-10">
+
+        <!-- Glare -->
+        <div class="glare"></div>
+
+        <!-- Silhouettes -->
+        <div class="characters">
+            <img src="{{ asset('svg/mario-silhouette.svg') }}" class="char char-top-left" alt="Mario">
+            <img src="{{ asset('svg/link-silhouette.svg') }}" class="char char-top-right" alt="Link">
+            <img src="{{ asset('svg/sonic-silhouette.svg') }}" class="char char-bottom-left" alt="Sonic">
+            <img src="{{ asset('svg/pacman-silhouette.svg') }}" class="char char-bottom-right" alt="Pac-Man">
+        </div>
 
         <!-- Title -->
-        <h1 class="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mb-4 tracking-wide">
-            Join Agac
+        <h1 class="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mb-4 tracking-wide animate-pulse">
+            Join GameHub
         </h1>
 
-        <!-- Subtitle -->
         <p class="text-center text-gray-400 mb-6 text-sm">
             Level up your gaming experience
         </p>
 
         <!-- Form -->
-        <form method="POST" class="space-y-6">
+        <form method="POST" class="space-y-6 relative z-10">
             @csrf
 
             <!-- Nickname -->
@@ -121,7 +238,6 @@
                     class="w-full px-4 py-3 bg-gray-900/50 border-b-2 border-gray-600 text-white placeholder-transparent focus:outline-none focus:border-blue-500 transition duration-300"
                     minlength="1" maxlength="255">
                 <label for="nickname" class="floating-label">Nickname</label>
-                <i data-feather="user" class="absolute right-3 top-3.5 text-gray-400"></i>
             </div>
 
             <!-- Email -->
@@ -130,7 +246,6 @@
                     class="w-full px-4 py-3 bg-gray-900/50 border-b-2 border-gray-600 text-white placeholder-transparent focus:outline-none focus:border-blue-500 transition duration-300"
                     minlength="1" maxlength="255">
                 <label for="email" class="floating-label">Email Address</label>
-                <i data-feather="mail" class="absolute right-3 top-3.5 text-gray-400"></i>
             </div>
 
             <!-- Password -->
@@ -139,8 +254,17 @@
                     class="w-full px-4 py-3 bg-gray-900/50 border-b-2 border-gray-600 text-white placeholder-transparent focus:outline-none focus:border-blue-500 transition duration-300"
                     minlength="8">
                 <label for="password" class="floating-label">Password</label>
-                <i data-feather="lock" class="absolute right-3 top-3.5 text-gray-400"></i>
             </div>
+
+            @if($errors->any())
+                <div class="bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-3 rounded relative" role="alert">
+                    <ul class="list-disc pl-5 space-y-1">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <!-- Submit Button -->
             <div class="pt-2">
@@ -150,12 +274,17 @@
                     <span class="absolute inset-0 w-0 h-full bg-white opacity-10 group-hover:w-full transition-all duration-500 ease-out"></span>
                 </button>
             </div>
+
+            <!-- Login Redirect Link -->
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-400">
+                    Already have an account?
+                    <a href="/login" class="login-link">
+                        Log in here
+                    </a>
+                </p>
+            </div>
         </form>
     </div>
-
-    <!-- Initialize Icons -->
-    <script>
-        feather.replace();
-    </script>
 </body>
 </html>

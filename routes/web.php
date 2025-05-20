@@ -1,31 +1,33 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SteamController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\MissionController;
+use App\Http\Controllers\LeaderboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/welcome', function () {
-    return view('welcome');
+Route::get('/', function () {
+    return redirect()->route('my-games');
+})->middleware(['auth', 'verified'])->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/stats', [ProfileController::class, 'stats'])->name('profile.stats');
+
+    // Games routes
+    Route::get('/my-games', [GameController::class, 'myGames'])->name('my-games');
+    Route::get('/browse-games', [GameController::class, 'browse'])->name('browse-games');
+    Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show');
+
+    // Steam routes
+    Route::get('/steam/connect', [SteamController::class, 'connect'])->name('steam.connect');
+    Route::get('/steam/callback', [SteamController::class, 'callback'])->name('steam.callback');
+
+    Route::get('/missions', [MissionController::class, 'index'])->name('missions.index');
+    Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 });
 
-Route::get('/login', function () {
-    return view('login');
-})->name("login");
-
-Route::post('/login', [UserController::class, "login"])->name("login");
-
-Route::get('/register', function () {
-    return view('register');
-})->name("register");
-
-Route::post('/register', [UserController::class, "store"])->name("register");
-
-Route::post('/logout', [UserController::class, "logout"])->name("logout");
-
-Route::get('/logout', function (){
-    return redirect("/welcome"); 
-})->name("logout");
-
-Route::get('/games', [GameController::class, 'index'])->name('games.index');
-
-Route::get('/games/{id}', [GameController::class, 'show'])->name('games.show');
+require __DIR__.'/auth.php';

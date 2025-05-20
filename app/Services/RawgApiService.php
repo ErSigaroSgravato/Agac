@@ -18,13 +18,20 @@ class RawgApiService
         $this->apiKey = config('services.rawg.key');
     }
 
-    public function getGames($page = 1)
+    public function getGames($page = 1, $search = null)
     {
+        $query = [
+            'key' => $this->apiKey,
+            'page' => $page,
+            'page_size' => 12
+        ];
+
+        if ($search) {
+            $query['search'] = $search;
+        }
+
         $response = $this->client->get("games", [
-            'query' => [
-                'key' => $this->apiKey,
-                'page' => $page
-            ]
+            'query' => $query
         ]);
 
         return json_decode($response->getBody(), true);

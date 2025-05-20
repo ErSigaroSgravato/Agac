@@ -14,6 +14,13 @@ return [
     |
     */
 
+    'mailgun' => [
+        'domain' => env('MAILGUN_DOMAIN'),
+        'secret' => env('MAILGUN_SECRET'),
+        'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+        'scheme' => 'https',
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
@@ -37,6 +44,12 @@ return [
 
     'rawg'=>[
         'key' => env('RAWG_API_KEY'),
+    ],
+
+    'steam' => [
+        'api_key' => env('STEAM_API_KEY'),
+        'base_url' => 'https://api.steampowered.com/',
+        'redirect_uri' => env('STEAM_REDIRECT_URI'),
     ]
 
 ];
